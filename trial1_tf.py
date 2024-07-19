@@ -12,11 +12,11 @@ IMG_WIDTH = 256
 IMG_HEIGHT = 256
 IMG_CHANNELS = 3
 LATENT_DIM = 128
-VAE_LR = 1e-4
-GEN_LR = 1e-4
-DISC_LR = 1e-4
+VAE_LR = 1e-4 #finetune
+GEN_LR = 1e-4 #finetune
+DISC_LR = 1e-4 #finetune
 LAMBDA_CYCLE = 10
-EPOCHS = 25
+EPOCHS = 25 # 40
 BATCH_SIZE = 32
 
 # Set the directories for normal and sketch images
@@ -85,7 +85,7 @@ class VAE(keras.Model):
             "kl_loss": self.kl_loss_tracker.result(),
         }
 
-def build_encoder(latent_dim, input_shape):
+def build_encoder(latent_dim, input_shape): # add more layers
     encoder_inputs = keras.Input(shape=input_shape)
     x = layers.Conv2D(32, 3, activation="relu", strides=2, padding="same")(encoder_inputs)
     x = layers.Conv2D(64, 3, activation="relu", strides=2, padding="same")(x)
@@ -209,7 +209,7 @@ class HybridGAN(keras.Model):
             "disc_loss": self.disc_loss_tracker.result(),
         }
 
-def build_generator(img_shape):
+def build_generator(img_shape): #finetune both
     inputs = layers.Input(shape=img_shape)
     down_stack = [
         downsample(64, 4, apply_instancenorm=False),
